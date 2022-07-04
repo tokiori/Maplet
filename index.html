@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Maplet sample</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content= "initial-scale=1">
+	<script type="text/javascript" src="./maplet.js"></script>
+	<script>
+		ml.exec();
+	</script>
+	<style>
+		body{
+			line-height:1.5em;
+		}
+		code{
+			border : 1px solid #cccccc;
+			background-color : #eeeeee;
+			display :block;
+			padding:0.5em;
+		}
+	</style>
+</head>
+<body>
+	<section>
+		<h1>Mapletについて</h1>
+		<p>
+			VUE.JS等を諸事情で使えない場合の代替簡易ライブラリ。<br>
+			（コード全量を把握できていないオープンソースは使うな！っていうプロジェクトとか・・・）<br>
+			<br>
+			下記機能を実装<br>
+			・プレースホルダ置換<br>
+			・要素表示判定<br>
+			※「attreach」を流用して「applyshow」のような属性判定を行うカスタムメソッド量産可能。
+		</p>
+	</section>
+	<section>
+		<h2>使用時の注意</h2>
+		<p>
+			onloadのイベントリスナーで「body」配下を全量リプレースするため、jQuery等を併用している場合はイベントリスナーの実行順序を考慮すること。
+		</p>
+	</section>
+	<section>
+		<h2>maplet.jsの動作サンプル</h2>
+
+		<h3>データ保持</h3>
+		<p>ml.dataに任意のデータを保持することで、下記mappingを行うことができる。</p>
+		<p>
+			例：ページを開いた時点の日付時刻をml.data.nowとして格納
+		</p>
+		<code>
+			// script<br>
+			ml.data.now = new Date();
+		</code>
+		<script>
+			ml.data.now = new Date();
+		</script>
+
+		<h3>URLパラメータ保持</h3>
+		<p>読み込み時にml.paramsにURLパラメータを保持し、ml.dataにもコピーする。</p>
+		<p>
+			<a href="./index.html?param1=abcde&param2=12345">パラメータを格納するサンプル</a>
+		</p>
+		<script>
+			var paramstr = ml.each(ml.params, function(val, key){ return key+":"+val; }).join(",");
+			ml.data.paramshow = paramstr ? paramstr : "存在しません";
+		</script>
+		<samp>
+			URLパラメータは「${data.paramshow}」です。
+		</samp>
+		<code><samp>
+			// script<br>
+			var paramstr = ml.each(ml.params, function(val, key){ return key+":"+val; }).join(",");<br>
+			ml.data.paramshow = paramstr ? paramstr : "存在しません";<br>
+			&lt;!-- html --&gt;<br>
+			URLパラメータは「$ {data.paramshow}」です。
+		</samp></code>
+
+		<h3>プレースホルダ置換</h3>
+		<p>
+			ml.dataを利用してプレースホルダ「${}」のデータ置換を行う。<br>
+			処理内部で対象文字列をFunction化して戻り値として扱うため、数式での評価が可能。
+		</p>
+		<p>
+			例：「data.now」プレースホルダを「ml.data.now」で置換
+		</p>
+		<samp>
+			開いた時点の日付時刻は「${data.now}」です。
+		</samp>
+		<code><samp>
+			&lt;!-- html --&gt;<br>
+			開いた時点の日付時刻は「$ {data.now}」です。<br>
+		</samp></code>
+
+		<h3>要素表示判定</h3>
+		<p>
+			「ml-show」属性を付与した要素の表示判定を行う。<br>
+			処理内部で属性文字列をFunction化して戻り値として扱うため、数式での評価が可能。
+		</p>
+		<p>
+			例：「ml.data.now」の秒が偶数の場合はclass「even」の要素を表示、奇数の場合はclass「odd」の要素を表示
+		</p>
+		<samp>
+			<span class="even" ml-show="data.now.getSeconds() % 2 == 0">「data.now」の秒が偶数です。</span>
+			<span class="odd"  ml-show="data.now.getSeconds() % 2 == 1">「data.now」の秒が奇数です。</span>
+		</samp>
+		<code><samp>
+			&lt;!-- html --&gt;<br>
+			&lt;span class="even" ml-show="data.now.getSeconds() % 2 == 0">「data.now」の秒が偶数です。&lt;/span><br>
+			&lt;span class="odd"  ml-show="data.now.getSeconds() % 2 == 1">「data.now」の秒が奇数です。&lt;/span>
+		</samp></code>
+	</section>
+</body>
+</html>
